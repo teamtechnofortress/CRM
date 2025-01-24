@@ -1,0 +1,23 @@
+{
+  "name": "wholesale-crm",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@woocommerce/woocommerce-rest-api": "^1.0.1",
+    "bcryptjs": "^2.4.3",
+    "bootstrap": "^5.0.1",
+    "cookie": "^1.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.12.0",
+    "mongoose": "^8.9.5",
+    "next": "14.2.23",
+    "react": "^18",
+    "react-dom": "^18"
+  }
+}
