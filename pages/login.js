@@ -14,6 +14,7 @@ const login = () => {
     event.preventDefault();
 
     try {
+      console.log("API path:", `${process.env.NEXT_PUBLIC_HOST}/api/login`);
       const response = await axios.post(`${process.env.NEXT_PUBLIC_HOST}/api/login`,formData);
       // console.log('API Response:', response);
 
