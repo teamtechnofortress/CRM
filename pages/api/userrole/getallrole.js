@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     if (req.method === "GET") {
         try {
             // Fetch all roles from the database
-            const roles = await Userrole.find().populate("permissions", "permission");
+            const roles = await Userrole.find();
 
             console.log('Role:', roles);
             return res.status(200).json({ status: "success", data: roles });
