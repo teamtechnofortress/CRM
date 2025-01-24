@@ -1,11 +1,8 @@
 import { connectDb } from "@/helper/db";
-import Userrole from "@/models/userrole";
-import Permission from "@/models/permission";
+import User from "@/models/User";
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
-
-  console.log('API Hit');
   const token = req.cookies.token;
 
   // Check if token exists
@@ -13,24 +10,24 @@ export default async function handler(req, res) {
     res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
     return res.status(401).json({ status: "tokenerror", message: 'Token Missing!' });
   }
+
+  // Verify token and handle expiration errors
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // If token is valid, connect to the database
     await connectDb();
-    // Handle GET requests
+
     if (req.method === "GET") {
-        try {
-            // Fetch all roles from the database
-            const roles = await Userrole.find().populate("permissions", "permission");
-
-            console.log('Role:', roles);
-            return res.status(200).json({ status: "success", data: roles });
-
-        } catch (error) {
-            return res.status(500).json({ status: "error", message: error.message });
-        }
+      try {
+        const users = await User.find().populate('role', 'role');
+        return res.status(200).json({ status: "success", data: users });
+      } catch (error) {
+        return res.status(500).json({ status: "error", message: error.message });
+      }
+    } else {
+      return res.status(405).json({ message: "Method Not Allowed" });
     }
-    
-    
   } catch (error) {
     console.error('Error during token verification:', error.message);
 
@@ -42,8 +39,5 @@ export default async function handler(req, res) {
 
     // Handle other errors (invalid token, etc.)
     return res.status(401).json({ status: "error", message: 'Invalid Token!' });
-    
   }
-    // For unsupported methods, return 405
-    return res.status(405).json({ message: "Method not allowed" });
-  }
+}

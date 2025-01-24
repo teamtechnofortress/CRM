@@ -1,11 +1,10 @@
 import mongoose from "mongoose";
 
-const { Schema } = mongoose; 
+const { Schema } = mongoose;
 
-const permissionSchema = new Schema({
-    
-    permission: { type: String, required: true },
- 
+const permissionsSchema = new Schema({
+  permission: { type: String, required: true },
 }, { timestamps: true });
 
-export default mongoose.models.Permission || mongoose.model("Permission", permissionSchema);
+// Export the model as 'permissions' (matching the ref in roleSchema)
+export default mongoose.models.permissions || mongoose.model("permissions", permissionsSchema);

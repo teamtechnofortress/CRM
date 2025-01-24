@@ -1,6 +1,6 @@
 import { connectDb } from "@/helper/db";
+import User from "@/models/User";
 import Userrole from "@/models/userrole";
-import Permission from "@/models/permission";
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
             // Fetch all roles from the database
             const roles = await Userrole.find().populate("permissions", "permission");
 
-            console.log('Role:', roles);
+            // console.log('Role:', roles);
             return res.status(200).json({ status: "success", data: roles });
 
         } catch (error) {

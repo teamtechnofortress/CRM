@@ -10,7 +10,7 @@ const viewallusers = () => {
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/api/userrole/getallrole`);
 
-            console.log('API response:',response.data.data);
+                console.log('API response:',response.data.data);
 
             if (response.data.status === "success") {
                 setRole(response.data.data); 
