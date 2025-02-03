@@ -11,7 +11,7 @@ const home = () => {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/api/woocommerce/getallproduct`);
 
       if (response.data && response.data.message) {
-        console.log('API Response:', response.data.data);
+        // console.log('API Response:', response.data.data);
         setProducts(response.data.data);
       } else {
         console.error('Unexpected API Response:', response.data);
@@ -36,7 +36,7 @@ const home = () => {
   return (
     <div>
       <h1>Product List</h1>
-      <table border="1" style={{ borderCollapse: "collapse", width: "100%" }}>
+      <table className="table">
         <thead>
           <tr>
             <th>ID</th>

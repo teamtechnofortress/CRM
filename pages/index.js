@@ -21,7 +21,6 @@ const geistMono = localFont({
 export default function Home() {
   const router = useRouter();
 
-
   const logout = async () => {
     const response = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/api/logout`);
     console.log('API Response logout:', response);
@@ -29,22 +28,19 @@ export default function Home() {
 
       alert("User logout successfully");
       router.push(`${process.env.NEXT_PUBLIC_HOST}/login`);
-
-
     }else{
       alert("User logout error");
 
     }
 
   };
-
+  
   return (
-    <>
+    <div className="container">
     <div>
-      <button onClick={logout}>Logout</button>
+      <button  className="btn btn-danger" onClick={logout}>Logout</button>
     </div>
-
       <ViewerHome />
-    </>
+    </div>
   );
 }

@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 const viewallusers = () => {
     const router = useRouter();
     const [users, setUsers] = useState([]); 
+      const [loading, setLoading] = useState(true);
+    
 
     const fetchallusers = async () => {
         try {
@@ -21,10 +23,15 @@ const viewallusers = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+        finally{
+          setLoading(false);
+        }
     };
     useEffect(() => {
         fetchallusers();  
     }, []);
+    
+    if (loading) return <div>Loading...</div>;
 
 
   return (

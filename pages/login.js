@@ -1,10 +1,12 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { useRouter } from 'next/router';
+import ToastComponent from '@/components/toastcomponent'
+import { toast } from "react-toastify";
+
 
 const login = () => {
   const router = useRouter();
-
   const [formData, setFormData] = useState({
           email: '',
           password: '',
@@ -12,18 +14,17 @@ const login = () => {
       
   const auth = async (event) => {
     event.preventDefault();
-
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_HOST}/api/login`,formData);
       // console.log('API Response:', response);
-
       const data = response.data;
       if (data.status === 'Success') {
-
+         toast.success("Login successfully!");
         if (data.token) {
           // Redirect to homepage or dashboard
-          router.push(`${process.env.NEXT_PUBLIC_HOST}/`);
-
+          setTimeout(() => {
+            router.push(`${process.env.NEXT_PUBLIC_HOST}/`);
+          }, 1000);
         }
 
         // localStorage.setItem('authToken', data.token);
@@ -52,9 +53,9 @@ const login = () => {
         [name]: value
     }));
   };
-
   return (
     <div className='container'>
+       <ToastComponent />
       <form onSubmit={auth} method='POST'>
         <div className="mb-3 mt-3">
           <label htmlFor="exampleInputEmail" className="form-label">Email address</label>

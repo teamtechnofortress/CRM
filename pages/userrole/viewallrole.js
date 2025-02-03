@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const viewallusers = () => {
     const router = useRouter();
     const [roles, setRole] = useState([]); 
+    const [loading, setLoading] = useState(true);
 
     const fetchallusers = async () => {
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/api/userrole/getallrole`);
 
-            console.log('API response:',response.data.data);
+            // console.log('API response:',response.data.data);
 
             if (response.data.status === "success") {
                 setRole(response.data.data); 
@@ -23,12 +25,15 @@ const viewallusers = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+        finally{
+            setLoading(false);
+        }
     };
     useEffect(() => {
         fetchallusers();  
     }, []);
 
-
+  if (loading) return <div>Loading...</div>;
   return (
     <div>
         <table className="table">
@@ -37,6 +42,7 @@ const viewallusers = () => {
                 <th scope="col">#</th>
                 <th scope="col">Role</th>
                 <th scope="col">Permission</th>
+                <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,6 +68,9 @@ const viewallusers = () => {
                                 {permission.permission}
                                 </span>
                             ))}
+                        </td>
+                        <td>
+                          <Link href={`${process.env.NEXT_PUBLIC_HOST}/userrole/editrole?id=${role._id}`}>Edit</Link>
                         </td>
                     </tr>
                     ))

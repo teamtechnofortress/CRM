@@ -1,5 +1,8 @@
 import React, { useEffect,useState } from 'react'
 import axios from 'axios';
+import ToastComponent from '@/components/toastcomponent'
+import { toast } from "react-toastify";
+
 
 const adduser = () => {
     const [userRole, setUserRole] = useState([]);
@@ -12,7 +15,6 @@ const adduser = () => {
         role: ''
     });
     
-
     const fetchallrole = async () =>{
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_HOST}/api/userrole/getallrole`);
@@ -34,24 +36,34 @@ const adduser = () => {
         }));
     };
     const handleSubmit = async (event) => {  
-
         event.preventDefault();
-        
         // console.log(formData);
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_HOST}/api/users/adduser`, formData);
             if (response.data.status === "success") {
-                alert("User added successfully");
+              toast.success("User added successfully!");
+              setFormData({
+                firstname: '',
+                lastname: '',
+                email: '',
+                password: '',
+                phone: '',
+                role: ''
+              });
+              // toast.success("User added successfully!");
             } else {
-                alert("User not added");
+               toast.error("User Not Added!");
             }
         } catch (error) {
             console.error('Error adding user:', error);
+            toast.error("An error occurred while adding the user.");
+        }
+        finally{
         }
     }
-
   return (
     <div className='container'>
+        <ToastComponent />
         <form method="POST" onSubmit={handleSubmit}>
         <div className="mb-3 mt-3">
           <label htmlFor="exampleInputFirstName" className="form-label">First Name</label>

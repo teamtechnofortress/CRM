@@ -5,47 +5,44 @@ import jwt from 'jsonwebtoken';
 
 
 export default async function handler(req, res) {
-  await connectDb();
 
+  const token = req.cookies.token;
 
+  if (!token) {
+    res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+    return res.status(401).json({ status: "tokenerror", message: 'Token Missing!' });
+  }
 
-//   const data = req.body;
-//   console.log(data);
-
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    await connectDb();
     if (req.method === "POST") {
-        try {
-            const {firstname,lastname,email,password,phone,role} = req.body;
-
-            if (!password) {
-                return res.status(400).json({ status: 'error', message: 'Password is required' });
-            }
-
-            const hashedPassword = await bcrypt.hash(password, 10);
-    
-            // Create a new User document with the received data
-            const newUser = new User({
-                firstname,
-                lastname,
-                email,
-                password:hashedPassword,
-                phone,
-                role
-            });
-    
-            // Save the new role to the database
-            await newUser.save();
-    
-            // Send a success response
-            return res.status(200).json({ status: "success" });
-            // return res.status(200).json({ status: "success", data: newRole });
-        } catch (error) {
-          return res.status(500).json({ status: "error", message: error.message });
-        }
+      try {
+          const {firstname,lastname,email,password,phone,role} = req.body;
+          if (!password) {
+              return res.status(400).json({ status: 'error', message: 'Password is required' });
+          }
+          const hashedPassword = await bcrypt.hash(password, 10);
+          const newUser = new User({
+              firstname,
+              lastname,
+              email,
+              password:hashedPassword,
+              phone,
+              role
+          });
+          await newUser.save();
+          return res.status(200).json({ status: "success" });
+      } catch (error) {
+        return res.status(500).json({ status: "error", message: error.message });
       }
-    
-      // For unsupported methods, return 405
-      return res.status(405).json({ message: "Method not allowed" });
-
-
-    res.status(200).json({ status: "success" });
+    }
+  } catch (error) {
+    console.error('Error during token verification:', error.message);
+    if (error.name === 'TokenExpiredError') {
+      res.setHeader('Set-Cookie', 'token=; Max-Age=0; Path=/; HttpOnly');
+      return res.status(401).json({ status: "tokenerror", message: 'Token Expired!' });
+    }
+    return res.status(401).json({ status: "error", message: 'Invalid Token!' });
+  }
 }
